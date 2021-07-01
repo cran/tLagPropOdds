@@ -1,0 +1,15 @@
+d18275acb39718cbfdf66a20c706378d *DESCRIPTION
+f39f5dce87c6ce990ce63d7247c9a338 *NAMESPACE
+7d041345e98e24a2e79e7f05d92472bb *R/aipw.R
+14b536196d80d250fffbb5028c052a6b *R/augment.R
+ebca4e282446ec9a166696b776f744a9 *R/infl.R
+bc02943f9379708e43bc8f3f3569d543 *R/ipw.R
+e1267b7cad6ae03e77df8a1dfb01f16d *R/kaplanMeier.R
+e863a6c6f26a00e49d93c05fe7d8b1ee *R/print.tLagPropOdds.R
+9a6f01ce4adf2fa1cbef99b174862dc5 *R/tLagData.R
+2915fb10ee61a7c71f127ef44d2fcb66 *R/tLagPropOdds.R
+977031ae081a64fa9add8cc0a9e55e20 *R/verifyInputs.R
+4028d0758d1d4d347f05603e0a075285 *data/tLagData.RData
+5346a2d87fe087b7f9bed312dd5ad16f *man/print.Rd
+ab7d674cdf5b9943ab3ac3045f064b10 *man/tLagData.Rd
+61fc3007a4255492179664e96a5dd695 *man/tLagPropOdds.Rd
