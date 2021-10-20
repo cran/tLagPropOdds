@@ -1,0 +1,3 @@
+##### Version 1.1
+
+Bug fix in verifyInputs.R regarding original treatment variable names

@@ -174,7 +174,9 @@
       stop("treatment (A) must be integer or factor", call. = FALSE)
 
     }
-  }
+  } else {
+    origTxNames <- sort(unique(x = df_uv$A))
+  }    
 
   # return general data as 'uv'
   inputs$uv <- df_uv
