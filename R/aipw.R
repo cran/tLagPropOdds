@@ -210,22 +210,18 @@
   est <- exp(x = est)
 
   # estimated standard error using delta method  {nBeta x nEst}
-  se <- matrix(data = apply(X = est, 
-                            MARGIN = 2L, 
-                            FUN = function(x, vee) { 
-                                    dx <- diag(x = x, nrow = length(x = x))
-                                    sqrt(x = diag(x = dx %*% vee %*% dx))
-                                  },
-                            vee = veeInv),
-               nrow = nBeta,
-               dimnames = dimnames(x = est))
+  dx <- diag(x = est[,"IPWCC"], ncol = nrow(x = est))
+  se_IPW <- sqrt(x = diag(x = dx %*% veeInv %*% crossprod(x = score) %*% veeInv %*% dx))
+
+  dx <- diag(x = est[,"AIPWCC"], ncol = nrow(x = est))
+  se_AIPW <- sqrt(x = diag(x = dx %*% veeInv %*% crossprod(x = score - yHat) %*% veeInv %*% dx))
 
   # 95% confidence interval using confidence interval of parameters
   lower <- exp(x = lower)
   upper <- exp(x = upper)
 
   ipwResult$odds <- cbind("est" = est[,"IPWCC"],
-                          "se" = se[,"IPWCC"],
+                          "se" = se_IPW,
                           "lower .95" = lower[,"IPWCC"],
                           "upper .95" = upper[,"IPWCC"])
 
@@ -236,7 +232,7 @@
 
   if (!is.null(x = ti) || !is.null(x = td)) {
     aipwResult$odds = cbind("est" = est[,"AIPWCC"],
-                            "se" = se[,"AIPWCC"],
+                            "se" = se_AIPW,
                             "lower .95" = lower[,"AIPWCC"],
                             "upper .95" = upper[,"AIPWCC"])
     rownames(x = aipwResult$odds) <- names(x = txOpts)[-1L]

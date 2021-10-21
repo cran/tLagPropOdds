@@ -1,3 +1,9 @@
-##### Version 1.1
+##### Version 1.2 10-20-2021
+
+Bug fix in aipw.R regarding standard error of odds ratio
+
+
+##### Version 1.1 10-20-2021
 
 Bug fix in verifyInputs.R regarding original treatment variable names
+
