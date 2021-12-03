@@ -184,7 +184,7 @@
   upper <- est + stats::qnorm(p = 0.975)*se
 
   # p-values {nBeta x nEst}
-  pValue <- {1.0 - stats::pnorm(q = est / se)}*2.0
+  pValue <- {1.0 - stats::pnorm(q = abs(x = est / se))}*2.0
 
   ipwResult <- list("logOdds" = cbind("beta" = est[,"IPWCC"],
                                       "se" = se[,"IPWCC"],
@@ -213,9 +213,6 @@
   dx <- diag(x = est[,"IPWCC"], ncol = nrow(x = est))
   se_IPW <- sqrt(x = diag(x = dx %*% veeInv %*% crossprod(x = score) %*% veeInv %*% dx))
 
-  dx <- diag(x = est[,"AIPWCC"], ncol = nrow(x = est))
-  se_AIPW <- sqrt(x = diag(x = dx %*% veeInv %*% crossprod(x = score - yHat) %*% veeInv %*% dx))
-
   # 95% confidence interval using confidence interval of parameters
   lower <- exp(x = lower)
   upper <- exp(x = upper)
@@ -231,6 +228,9 @@
 
 
   if (!is.null(x = ti) || !is.null(x = td)) {
+    dx <- diag(x = est[,"AIPWCC"], ncol = nrow(x = est))
+    se_AIPW <- sqrt(x = diag(x = dx %*% veeInv %*% crossprod(x = score - yHat) %*% veeInv %*% dx))
+
     aipwResult$odds = cbind("est" = est[,"AIPWCC"],
                             "se" = se_AIPW,
                             "lower .95" = lower[,"AIPWCC"],

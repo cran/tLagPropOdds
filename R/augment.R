@@ -57,7 +57,7 @@ setMethod(f = ".augment",
             nTx <- length(x = txOpts)
 
             # number of beta parameters
-            nBeta <- nTx - 1L
+            nBeta <- ncol(x = score)
 
             # number of time-independent basis functions
             nTI <- ncol(x = ti)
@@ -116,7 +116,7 @@ setMethod(f = ".augment",
             nTx <- length(x = txOpts)
 
             # number of beta parameters
-            nBeta <- nTx - 1L
+            nBeta <- ncol(x = score)
 
             # martingale increments for the adjustment and
             # time-dependent augmentation terms
@@ -178,7 +178,9 @@ setMethod(f = ".augment",
             nTx <- length(x = txOpts)
 
             # number of beta parameters
-            nBeta <- nTx - 1L
+            # when being called by catProbs method, this is equivalent
+            # to nTx
+            nBeta <- ncol(x = score)
 
             # number of time-independent basis functions
             nTI <- ncol(x = ti)
@@ -228,6 +230,7 @@ setMethod(f = ".augment",
 
                 des[[ i ]] <- cbind(des[[ i ]], tmp)
 
+                # when called by catProbs, this will be zero for i != j
                 adj[subja,i] <- haug$adj.list[[ j ]][,i]
               }
             }

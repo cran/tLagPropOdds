@@ -39,7 +39,9 @@ setMethod(f = ".infl",
             nTx <- length(x = txOpts)
 
             # number of beta parameters
-            nBeta <- nTx - 1L
+            # when being called by catProbs method, this is equivalent
+            # to nTx
+            nBeta <- ncol(x = score)
 
             # Initialize returned list for adjustment term
             adj.list <- list()
@@ -73,6 +75,8 @@ setMethod(f = ".infl",
               # {nSubja x nUniqueCensor}
               adj.list[[ i ]] <- matrix(data = 0.0, nrow = nSubja, ncol = nBeta)
 
+              # when called for catProbs, the only non-zero column
+              # is that corresponding to the subset of a_i
               for (j in 1L:nBeta) {
                 muKhat <- matrix(data = colSums(x = score[subja,j]*dmc$Yt) / 
                                         dmc$Ysum,
@@ -97,7 +101,9 @@ setMethod(f = ".infl",
             nTx <- length(x = txOpts)
 
             # number of beta parameters
-            nBeta <- nTx - 1L
+            # when being called by catProbs method, this is equivalent
+            # to nTx
+            nBeta <- ncol(x = score)
 
             # Initialize returned lists for adjustment and influence
             adj.list <- list()
@@ -133,6 +139,8 @@ setMethod(f = ".infl",
               # {nSubja x nUniqueCensor}
               adj.list[[ i ]] <- matrix(data = 0.0, nrow = nSubja, ncol = nBeta)
 
+              # when called for catProbs, the only non-zero column
+              # is that corresponding to the subset of a_i
               for (j in 1L:nBeta) {
                 muKhat <- matrix(data = colSums(x = score[subja,j]*dmc$Yt) / 
                                         dmc$Ysum,
@@ -144,7 +152,9 @@ setMethod(f = ".infl",
 
               # number of bases in time-dependent component
               nBasis <- dim(x = td[[ i ]])[3L]
-              infl.list[[ i ]] <- matrix(data = 0.0, nrow = nSubja, ncol = nBasis)
+              infl.list[[ i ]] <- matrix(data = 0.0, 
+                                         nrow = nSubja, 
+                                         ncol = nBasis)
 
               for (l in 1L:nBasis) {
 
@@ -176,11 +186,19 @@ setMethod(f = ".infl",
 #   $Yt   with dimension {nSubja x nUniqueCensor}
 #   $Ysum with dimension {nUniqueCensor}
 .dMC <- function(u, delta, uniqueCensor, txOpts) {
+  n <- length(x = u)
+  nT <- length(x = uniqueCensor)
 
   # I(U_i = u, Delta_i = 0)
   # {nSubja x nUniqueCensor}
-  dNt <- {outer(X = u*{1L-delta}, Y = uniqueCensor+1e-8, FUN = "<") &
-          outer(X = u*{1L-delta}, Y = uniqueCensor-1e-8, FUN = ">")} * 1.0
+  dNt <- matrix(data = 0.0, nrow = n, ncol = nT)
+
+  # findInterval is sufficient here because uniqueCensor comprises
+  # the unique values of u
+  int <- findInterval(x = u*{1-delta}, vec = uniqueCensor)
+  iw <- which(x = int > 0)
+
+  dNt[cbind(iw,int[iw])] <- 1L
 
   # sum_{i=1}^{n} I(U_i = u, Delta_i = 0)
   # {nUniqueCensor}
@@ -188,7 +206,11 @@ setMethod(f = ".infl",
 
   # I(U_i >= u)
   # {nSubja x nUniqueCensor}
-  Yt <- outer(X = u, Y = uniqueCensor-1e-8, FUN = ">")*1.0
+  # there should be no zeros
+  int <- findInterval(x = u, vec = uniqueCensor)
+
+  Yt <- matrix(data = 0.0, nrow = n, ncol = nT)
+  for (i in 1L:n) { Yt[i,1L:int[i]] <- 1.0 }
 
   # sum_{i=1}^{n} I(U_i >= u)
   # {nUniqueCensor}

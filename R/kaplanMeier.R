@@ -18,7 +18,9 @@
 
   # initialize returned vector
   Khat <- numeric(length = n)
-    
+
+  U <- uv$U
+
   # loop through each treatment
   for (i in 1L:nTx) {
 
@@ -28,15 +30,14 @@
     # censoring distribution evaluated at the U
     ss <- summary(object = survival::survfit(formula = Surv(U, {1L-delta}) ~ 1, 
                                              data = uv[subja,]), 
-                  times = uv$U[subja])
+                  times = c(0.0,unique(U[subja]), max(U)+1.0), extend = TRUE)
 
-    for (j in 1L:length(x = ss$time)) {
-      # match evaluation times to participants
-      use <- {uv$U > {ss$time[j] - 1e-8}} & {uv$U < {ss$time[j] + 1e-8}}
-      Khat[use & subja] <- ss$surv[j]
-    }
+    iw <- findInterval(x = uv$U[subja], ss$time)
+    Khat[subja] <- ss$surv[iw]
 
   }
+
+  Khat[uv$delta == 0L] <- 1.0
 
   return( Khat )
 }   

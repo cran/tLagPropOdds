@@ -58,8 +58,9 @@ At a minimum, the data provided for the analysis must contain the
   following information:
   \describe{
     \item{id:}{A unique participant identifier.}
-    \item{U:}{The time to the clinical event or censoring.}
-    \item{delta:}{The clinical event indicator (1 if U is the event time;
+    \item{U:}{The time to ascertainment of category or censoring.}
+    \item{delta:}{The indicator of ascertainment of category (1 if U is 
+                  the time to ascertainment;
                   0 otherwise).}
     \item{Cat:}{The ordered outcome category. Data must be provided as
                 a factor or an integer or be able to be converted to an 
