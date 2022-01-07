@@ -1,0 +1,137 @@
+#' Estimation of the Probability of a Specific Categorical Outcome by Treatment
+#'
+#' Inverse probability weighted complete case (IPWCC) and augmented inverse 
+#'  probability weighted complete case (AIPWCC) estimators for the 
+#'  probability of falling into a specific time-lagged ordered categorical 
+#'  outcome in a randomized clinical trial.
+#'
+#' At a minimum, the data provided for the analysis must contain the
+#'   following information:
+#'   \describe{
+#'     \item{id:}{A unique participant identifier.}
+#'     \item{U:}{The time to ascertainment of category or censoring.}
+#'     \item{delta:}{The indicator of ascertainment of category (1 if U is 
+#'                   the time to ascertainment;
+#'                   0 otherwise).}
+#'     \item{Cat:}{The ordered outcome category. Data must be provided as
+#'                 a factor or an integer or be able to be converted to an 
+#'                 integer without
+#'                 loss of information. If participant was censored
+#'                 (delta = 0), Cat can take any integer-like value or NA.}
+#'     \item{A:}{The treatment received. Data must be provided as
+#'               a factor or an integer or be able to be converted to an 
+#'               integer without loss of information. }
+#'   }
+#' With the exception of Cat, data must be complete.
+#'
+#' If the time-independent component is to be included in the AIPWCC estimator,
+#'   data must also include the time-independent basis functions 
+#'   f_m(X) m = 0, ..., M. If the intercept (f_0) term is not provided, it 
+#'   will be added by the software.
+#'
+#' If the time-dependent component is to be included in the AIPWCC estimator,
+#'   the data.frame must be a time-dependent dataset as described by package 
+#'   survival. Specifically, the time-dependent data must be specified for 
+#'   intervals (start,stop], and the data must include the following 
+#'   additional columns:
+#'   \describe{
+#'      \item{tstart:}{The lower boundary of the time interval to which the
+#'                     data pertain.}
+#'      \item{tstop:}{The upper boundary of the time interval to which the
+#'                    data pertain.}
+#'   }
+#'   Note that column headers \{"start", "stop"\} are also accepted.
+#'
+#'   The various combinations of inputs ti and td yield the following:
+#'   \describe{
+#'      \item{ti = NULL, td = NULL}{the IPWCC estimate is returned. 
+#'      (denoted as IPW in the simulations of the original manuscript.)}
+#'      \item{ti != NULL, td != NULL}{the IPWCC and the full 
+#'                                    AIPWCC estimates are returned. 
+#'      (denoted as AIPW2 in the simulations of the original manuscript.)}
+#'      \item{ti = NULL, td != NULL}{the IPWCC and the partial, time-independent 
+#'                                   AIPWCC estimates are returned. 
+#'      (denoted as AIPW1 in the simulations of the original manuscript.)}
+#'      \item{ti = NULL, td != NULL}{the IPWCC and the partial, time-dependent 
+#'                                   AIPWCC estimates are returned.}
+#'   }
+#'
+#' If a treatment subgroup has <5\% censoring, a message is generated and
+#'   the treatment subgroup is removed from the time-dependent component of the
+#'   AIPWCC estimator. If there is no censoring, the IPWCC estimator approaches
+#'   the usual proportional odds estimator.
+#'
+#' @param data A data.frame object. A data.frame containing all observed data.
+#'   At a minimum, this data.frame must contain columns with headers 
+#'   "id", "U", "delta", "Cat" and "A". If the time-independent component of
+#'   the estimator is to be included, data.frame must also contain the 
+#'   bases of f(X). If the time-dependent component is included, data.frame
+#'   must also contain the bases of h(X,L) as well as the time intervals with
+#'   column headers \{"tstart", "tstop"\} or \{"start","stop"\}. See Details for
+#'   additional information.
+#'
+#' @param ... Ignored. Included to require named inputs.
+#'
+#' @param ti A character or integer vector or NULL. The columns of data to be
+#'   included in the time-independent component of the estimator, 
+#'   f_m(X) m = 0, ..., M.  If NULL, the time-independent component is excluded 
+#'   from the AIPWCC estimator. See Details for additional information.
+#'
+#' @param td A character or integer vector or NULL. The columns of data to be
+#'   included in the time-dependent component of the estimator, 
+#'   h_l(X,Lbar), l = 1, ..., L. If NULL, the time-dependent component is 
+#'   excluded from the AIPWCC estimator. See Details for additional information.
+#'
+#' @returns An S3 object of class catProbsObj containing a list. The
+#'   elements of the list correspond to the selected AIPWCC and/or IPWCC
+#'   estimators. For each estimator, a list of matrix objects is returned,
+#'   one for each treatment, that
+#'   contains the estimated probabilities, their asymptotic standard errors, 
+#'   and the 95\% confidence intervals. The
+#'   S3 object has an additional attributes, "type", giving a verbose 
+#'   description of the components contained in the estimator.
+#'
+#' @include verifyInputs.R prob_ipw.R prob_aipw.R
+#'
+#' @export
+#'
+#' @examples
+#'
+#' data(tLagData)
+#'
+#' # full AIPWCC estimator
+#' catProbs(data = tLagData, ti = "x", td = c("hospStatus", "daysOut"))
+#'
+#' # partial, time-independent AIPWCC estimator
+#' catProbs(data = tLagData, ti = "x")
+#'
+#' # partial, time-dependent AIPWCC estimator
+#' catProbs(data = tLagData, td = c("hospStatus", "daysOut"))
+#'
+
+catProbs <- function(data, 
+                     ...,
+                     ti = NULL, 
+                     td = NULL) {
+
+  inputs <- .verifyInputs(df = data, ti = ti, td = td)
+
+  ipwObj <- .prob_ipw(uv = inputs$uv, 
+                      cats = inputs$cats, 
+                      txOpts = inputs$txOpts)
+
+  res <- .prob_aipw(uv = inputs$uv,
+                    ti = inputs$ti, 
+                    td = inputs$td,  
+                    ipwObj = ipwObj,  
+                    cats = inputs$cats,
+                    txOpts = inputs$txOpts,  
+                    uniqueCensor = inputs$uniqueCensor)
+  
+  class(x = res) <- 'catProbsObj'
+
+  attr(x = res, which = "type") <- inputs$type
+
+  return( res )
+}
+
