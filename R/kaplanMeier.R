@@ -30,10 +30,13 @@
     # censoring distribution evaluated at the U
     ss <- summary(object = survival::survfit(formula = Surv(U, {1L-delta}) ~ 1, 
                                              data = uv[subja,]), 
-                  times = c(0.0,unique(U[subja]), max(U)+1.0), extend = TRUE)
+                  times = uv$U[subja])
 
-    iw <- findInterval(x = uv$U[subja], ss$time)
-    Khat[subja] <- ss$surv[iw]
+    for (j in 1L:length(x = ss$time)) {
+      # match evaluation times to participants
+      use <- {uv$U > {ss$time[j] - 1e-8}} & {uv$U < {ss$time[j] + 1e-8}}
+      Khat[use & subja] <- ss$surv[j]
+    }
 
   }
 

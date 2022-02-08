@@ -1,3 +1,12 @@
+##### Version 1.7 02-07-2022
+
+Bug fix in kaplanMeier.R. This change might result in difference between 
+  estimates obtained in 1.5, but are identical to those obtained in 1.4 
+  and below.
+
+Modification to print statements to indicate factor level values rather than
+  indices.
+
 ##### Version 1.5 12-03-2021
 
 Bug fix in aipw.R regarding abs() in p-value

@@ -164,11 +164,11 @@
 
   for (i in 1L:nTx) {
     rw <- ipw$Tx == txOpts[i]
-    newIPW[[ as.character(x = txOpts[i]) ]] <- ipw[rw,-2L,drop=FALSE]
-    rownames(newIPW[[ as.character(x = txOpts[i]) ]]) <- NULL
+    newIPW[[ names(x = txOpts)[i] ]] <- ipw[rw,-2L,drop=FALSE]
+    rownames(newIPW[[ names(x = txOpts)[i] ]]) <- NULL
     if (!is.null(x = aipw)) {
-      newAIPW[[ as.character(x = txOpts[i]) ]] <- aipw[rw,-2L,drop=FALSE]
-      rownames(newAIPW[[ as.character(x = txOpts[i]) ]]) <- NULL
+      newAIPW[[ names(x = txOpts)[i] ]] <- aipw[rw,-2L,drop=FALSE]
+      rownames(newAIPW[[ names(x = txOpts)[i] ]]) <- NULL
     }
   }
 

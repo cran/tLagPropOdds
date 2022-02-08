@@ -186,19 +186,11 @@ setMethod(f = ".infl",
 #   $Yt   with dimension {nSubja x nUniqueCensor}
 #   $Ysum with dimension {nUniqueCensor}
 .dMC <- function(u, delta, uniqueCensor, txOpts) {
-  n <- length(x = u)
-  nT <- length(x = uniqueCensor)
 
   # I(U_i = u, Delta_i = 0)
   # {nSubja x nUniqueCensor}
-  dNt <- matrix(data = 0.0, nrow = n, ncol = nT)
-
-  # findInterval is sufficient here because uniqueCensor comprises
-  # the unique values of u
-  int <- findInterval(x = u*{1-delta}, vec = uniqueCensor)
-  iw <- which(x = int > 0)
-
-  dNt[cbind(iw,int[iw])] <- 1L
+  dNt <- {outer(X = u*{1L-delta}, Y = uniqueCensor+1e-8, FUN = "<") &
+          outer(X = u*{1L-delta}, Y = uniqueCensor-1e-8, FUN = ">")} * 1.0
 
   # sum_{i=1}^{n} I(U_i = u, Delta_i = 0)
   # {nUniqueCensor}
@@ -206,11 +198,7 @@ setMethod(f = ".infl",
 
   # I(U_i >= u)
   # {nSubja x nUniqueCensor}
-  # there should be no zeros
-  int <- findInterval(x = u, vec = uniqueCensor)
-
-  Yt <- matrix(data = 0.0, nrow = n, ncol = nT)
-  for (i in 1L:n) { Yt[i,1L:int[i]] <- 1.0 }
+  Yt <- outer(X = u, Y = uniqueCensor-1e-8, FUN = ">")*1.0
 
   # sum_{i=1}^{n} I(U_i >= u)
   # {nUniqueCensor}

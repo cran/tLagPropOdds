@@ -206,7 +206,7 @@
 
     # report total number of participants in treatment
     nSubja <- sum(subja)
-    message("    ", nSubja, " participants received tx ", txOpts[i])
+    message("    ", nSubja, " participants received tx ", names(x = txOpts[i]))
 
     # fit a NULL model to obtain unique censoring times
     fit <- survival::coxph(Surv(U, {1L-delta}) ~ 1 , data = df_uv[subja,])
@@ -223,7 +223,7 @@
       # included for this subgroup
 
       if (!is.null(x = td)) {
-        message("      no participants that received tx A = ", names(txOpts)[i], 
+        message("      no participants that received tx A = ", names(x = txOpts)[i], 
                 " are censored;\n",
                 "      **** time-dependent component for tx subset removed ****")
       }
@@ -239,7 +239,7 @@
       if (!is.null(x = td)) {
 
         message("      fewer than 5% of participants that received tx A = ", 
-                names(txOpts)[i], 
+                names(x = txOpts)[i], 
                 " are censored;\n",
                 "      **** time-dependent component for tx subset removed ****")
 

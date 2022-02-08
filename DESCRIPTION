@@ -2,8 +2,8 @@ Package: tLagPropOdds
 Type: Package
 Title: Proportional Odds Model with Censored, Time-Lagged Categorical
         Outcome
-Version: 1.6
-Date: 2022-01-07
+Version: 1.7
+Date: 2022-02-07
 Authors@R: c(person("Marie", "Davidian", role = "aut"),
              person("A. A.", "Tsiatis", role = "aut"),
              person("Shannon T.", "Holloway", role = c("aut", "cre"),
@@ -27,5 +27,5 @@ Collate: 'infl.R' 'augment.R' 'aipw.R' 'prob_aipw.R' 'kaplanMeier.R'
         'prob_ipw.R' 'verifyInputs.R' 'catProbs.R' 'ipw.R'
         'print.catProbsObj.R' 'print.tLagPropOdds.R' 'tLagData.R'
         'tLagPropOdds.R'
-Packaged: 2022-01-07 17:16:32 UTC; sthollow
-Date/Publication: 2022-01-07 17:50:02 UTC
+Packaged: 2022-02-08 15:21:34 UTC; sthollow
+Date/Publication: 2022-02-08 16:10:02 UTC
