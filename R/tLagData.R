@@ -12,7 +12,7 @@
 #'   randomized clinical trial.
 #'   \describe{
 #'     \item{id:}{A unique participant identifier.}
-#'     \item{A:}{The treatment received, where A={0,1}.}
+#'     \item{A:}{The treatment received, where A=\{0,1\}.}
 #'     \item{Cat:}{The ordered outcome category. There are 6 categories 
 #'                 ascertained at day 90.
 #'                 \describe{

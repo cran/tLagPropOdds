@@ -1,3 +1,11 @@
+##### Version 1.9 12-13-2023
+
+Documentation fixed to escape brackets.
+
+##### Version 1.8 2022-06-07
+
+Maintainer address change.
+
 ##### Version 1.7 02-07-2022
 
 Bug fix in kaplanMeier.R. This change might result in difference between 

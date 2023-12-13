@@ -1,6 +1,6 @@
-6f33bc74e0d8c7114d58675e372d4f96 *DESCRIPTION
+ddf84ffa97eb86a7e6c62cb600a231bb *DESCRIPTION
 050c96fe9a2b7e4d0a7ba22e9a831d1f *NAMESPACE
-36b071758914d81772877d0eb367076d *NEWS
+1504a3099e74c90bad7e6fef554ea6ca *NEWS
 4315c3b1670029d13963f28a66f08ce7 *R/aipw.R
 03e74048ebdbae40928ea1374fe592a8 *R/augment.R
 ba79022e8393289c69032a725c34a0e6 *R/catProbs.R
@@ -11,11 +11,11 @@ bc02943f9379708e43bc8f3f3569d543 *R/ipw.R
 e863a6c6f26a00e49d93c05fe7d8b1ee *R/print.tLagPropOdds.R
 4f0b2fba336d12a3d175dc697b7a9cf9 *R/prob_aipw.R
 36183bee45aaa19dd9b7c7a9d9e1f1ec *R/prob_ipw.R
-9a6f01ce4adf2fa1cbef99b174862dc5 *R/tLagData.R
+756bd8f792b3ba43664ba98b62330878 *R/tLagData.R
 b40afd24fc52b636ee136bc046f5ca40 *R/tLagPropOdds.R
 c4b5d9283e30171ba4ddea48c94cbd16 *R/verifyInputs.R
 4028d0758d1d4d347f05603e0a075285 *data/tLagData.RData
 fe17b61d243a1a680f5f9fa129fc3b81 *man/catProbs.Rd
 0e485dabb429a3f4967d5f0dd69836fe *man/print.Rd
-ab7d674cdf5b9943ab3ac3045f064b10 *man/tLagData.Rd
+5a80cba3f093465ed19a57e8a8e6ba18 *man/tLagData.Rd
 993cd64fd7564ef68641e65797858b5e *man/tLagPropOdds.Rd
